@@ -24,8 +24,11 @@ type Builder interface {
 }
 
 // Clause
+// Clause 用来构建，存储和操作SQL语句。
 type Clause struct {
-	Name                string // WHERE
+	// 表示构建当前Clause的操作，一般为： SELECT、INSERT、UPDATE、DELETE 等
+	Name string // WHERE
+
 	BeforeExpression    Expression
 	AfterNameExpression Expression
 	AfterExpression     Expression

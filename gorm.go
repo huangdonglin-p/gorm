@@ -120,6 +120,7 @@ type Session struct {
 func Open(dialector Dialector, opts ...Option) (db *DB, err error) {
 	config := &Config{}
 
+	// 自定义的排在后面
 	sort.Slice(opts, func(i, j int) bool {
 		_, isConfig := opts[i].(*Config)
 		_, isConfig2 := opts[j].(*Config)
@@ -139,6 +140,9 @@ func Open(dialector Dialector, opts ...Option) (db *DB, err error) {
 		}
 	}
 
+	// errors库也有类似的是用法
+	// 断言dialector接口类型是一个匿名接口，含有Apply(*Config) error方法。
+	// 从而调用底层结构体的Apply方法。
 	if d, ok := dialector.(interface{ Apply(*Config) error }); ok {
 		if err = d.Apply(config); err != nil {
 			return
@@ -392,6 +396,7 @@ func (db *DB) DB() (*sql.DB, error) {
 	return nil, ErrInvalidDB
 }
 
+// 这个方法很重要：安全的链式操作，https://learnku.com/articles/66736
 func (db *DB) getInstance() *DB {
 	if db.clone > 0 {
 		tx := &DB{Config: db.Config, Error: db.Error}

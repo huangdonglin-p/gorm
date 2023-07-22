@@ -19,20 +19,27 @@ import (
 )
 
 // Statement statement
+// Statement结构代表一条SQL语句，包括SQL语句本身，参数，以及执行时的一些配置。
 type Statement struct {
+	// 数据库对象，执行sql语句的数据库连接
 	*DB
-	TableExpr            *clause.Expr
-	Table                string
-	Model                interface{}
-	Unscoped             bool
-	Dest                 interface{}
-	ReflectValue         reflect.Value
-	Clauses              map[string]clause.Clause
-	BuildClauses         []string
-	Distinct             bool
-	Selects              []string // selected columns
-	Omits                []string // omit columns
-	Joins                []join
+	//
+	TableExpr *clause.Expr
+	// 表名
+	Table string
+	// 当前sql操作的Model，模型对象
+	Model interface{}
+	//
+	Unscoped     bool
+	Dest         interface{}
+	ReflectValue reflect.Value
+	Clauses      map[string]clause.Clause
+	BuildClauses []string
+	Distinct     bool
+	Selects      []string // selected columns
+	Omits        []string // omit columns
+	Joins        []join
+	// 预加载关联Model时指定加载的字段，以及加载时的一些配置
 	Preloads             map[string][]interface{}
 	Settings             sync.Map
 	ConnPool             ConnPool
@@ -40,12 +47,13 @@ type Statement struct {
 	Context              context.Context
 	RaiseErrorOnNotFound bool
 	SkipHooks            bool
-	SQL                  strings.Builder
-	Vars                 []interface{}
-	CurDestIndex         int
-	attrs                []interface{}
-	assigns              []interface{}
-	scopes               []func(*DB) *DB
+	SQL                  strings.Builder // 操作字符串缓冲区，strings.Builder`可以避免使用`+`号拼接字符串时导致的内存分配和性能问题。
+	// 本条SQL查询语句中的变量值
+	Vars         []interface{}
+	CurDestIndex int
+	attrs        []interface{}
+	assigns      []interface{}
+	scopes       []func(*DB) *DB
 }
 
 type join struct {
