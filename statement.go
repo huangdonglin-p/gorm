@@ -23,22 +23,26 @@ import (
 type Statement struct {
 	// 数据库对象，执行sql语句的数据库连接
 	*DB
-	//
+	// 表达式
 	TableExpr *clause.Expr
 	// 表名
 	Table string
 	// 当前sql操作的Model，模型对象
 	Model interface{}
+	// 是否启用软删除(deleted_at字段，还是物理删除)
+	Unscoped bool
 	//
-	Unscoped     bool
 	Dest         interface{}
 	ReflectValue reflect.Value
 	Clauses      map[string]clause.Clause
 	BuildClauses []string
 	Distinct     bool
-	Selects      []string // selected columns
-	Omits        []string // omit columns
-	Joins        []join
+	// select查询的字段名称
+	Selects []string // selected columns
+	// 查询时忽略的字段名称，其他展示
+	Omits []string // omit columns
+	// 存储Join表达式
+	Joins []join
 	// 预加载关联Model时指定加载的字段，以及加载时的一些配置
 	Preloads             map[string][]interface{}
 	Settings             sync.Map
@@ -46,8 +50,9 @@ type Statement struct {
 	Schema               *schema.Schema
 	Context              context.Context
 	RaiseErrorOnNotFound bool
-	SkipHooks            bool
-	SQL                  strings.Builder // 操作字符串缓冲区，strings.Builder`可以避免使用`+`号拼接字符串时导致的内存分配和性能问题。
+	// 跳过钩子函数
+	SkipHooks bool
+	SQL       strings.Builder // 操作字符串缓冲区，strings.Builder`可以避免使用`+`号拼接字符串时导致的内存分配和性能问题。
 	// 本条SQL查询语句中的变量值
 	Vars         []interface{}
 	CurDestIndex int

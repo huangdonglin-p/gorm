@@ -16,11 +16,15 @@ import (
 // ErrUnsupportedDataType unsupported data type
 var ErrUnsupportedDataType = errors.New("unsupported data type")
 
+// Schema定义了模型的元数据，包含模型对应的数据库表名，每个字段的名称，类型，属性等。
 type Schema struct {
-	Name                      string
-	ModelType                 reflect.Type
-	Table                     string
-	PrioritizedPrimaryField   *Field
+	// 模型名称
+	Name      string
+	ModelType reflect.Type
+	// 数据表名称
+	Table                   string
+	PrioritizedPrimaryField *Field
+	// 数据库字段名
 	DBNames                   []string
 	PrimaryFields             []*Field
 	PrimaryFieldDBNames       []string
